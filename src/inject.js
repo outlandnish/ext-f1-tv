@@ -17,7 +17,7 @@ const injectScripts = () => {
 const videoFinder = (mutations, observer) => {
 	for (let mutation of mutations)
 		if (mutation.target.id === 'playerComponentContainer') {
-			player = document.getElementById('hlsjsContent')
+			player = document.querySelector('video')
 			if (player) {
 				observer.disconnect()
 

@@ -19,9 +19,8 @@ const initializeCastApi = () => {
 	remotePlayerController = new cast.framework.RemotePlayerController(remotePlayer)
 	remotePlayerController.addEventListener(cast.framework.RemotePlayerEventType.IS_CONNECTED_CHANGED, event => {
 		console.log('connection change', event.value)
-		if (event.value) {
-			connectCastPlayer
-		}
+		if (event.value)
+			connectCastPlayer()
 	})
 	
 	console.log('cast api initialized')
@@ -44,18 +43,21 @@ document.body.appendChild(injectedCast)
 const connectCastPlayer = async () => {
 	console.log('loading media')
 	castSession = cast.framework.CastContext.getInstance().getCurrentSession()
-	console.log(castSession)
-	if (!castSession)
-		return
 
-	let mediaInfo = new chrome.cast.media.MediaInfo(player.src)
+	let mediaInfo = new chrome.cast.media.MediaInfo(player.src, 'application/x-mpegURL')
 	let request = new chrome.cast.media.LoadRequest(mediaInfo)
 	
 	try {
-		await castSession.loadMedia(request)
+		// await castSession.loadMedia(request)
+		castSession.loadMedia(request)
+			.then(() => { 
+				console.log('worked')
+				remotePlayerController.playOrPause()
+			}, errorCode => console.log(`Cast error loading media: ${errorCode}`))
+
 		console.log('Cast loaded media')
 	}
 	catch (errorCode) {
-		console.error(`Cast error loading media: ${errorCode}`)
+		console.log(`Cast error loading media: ${errorCode}`)
 	}
 }

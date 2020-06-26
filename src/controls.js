@@ -1,5 +1,4 @@
-const player = document.getElementById('hlsjsContent')
-let playing = true
+const player = document.querySelector('video')
 const seekSmall = 5							// 5 second jump on left / right arrows
 const seekLarge = 10						// 10 second jump on 'j'/ 'l' keys
 const volumeChange = 0.05				// 5% volume bump up / down
@@ -11,7 +10,6 @@ Object.defineProperty(HTMLMediaElement.prototype, 'playing', {
 			return !!(this.currentTime > 0 && !this.paused && !this.ended && this.readyState > 2);
 	}
 })
-
 
 window.addEventListener('keydown', event => {
   if (event.key === ' ')
@@ -41,4 +39,12 @@ window.addEventListener('keydown', event => {
       player.msRequestFullscreen();
     }
   }
+  else if (event.key >= '1' && event.key <= '9') {
+    let percentage = parseInt(event.key) / 10
+    player.currentTime = percentage * player.duration
+  }
+  else if (event.key === 'Home')
+    player.currentTime = 0
+  else if (event.key === 'End')
+    player.currentTime = player.duration
 })
