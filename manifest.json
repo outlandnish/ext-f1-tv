@@ -1,32 +1,27 @@
 {
-  "name": "CHANGE THIS : Extension boilerplate",
+  "name": "F1 TV Playback Controls",
   "version": "0.0.1",
   "manifest_version": 2,
-  "description": "This extension was created with the awesome extensionizr.com",
-  "homepage_url": "http://extensionizr.com",
+  "description": "Makes F1 TV streams more accessible with modern playback controls",
+  "homepage_url": "http://outlandnish.com",
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
   },
-  "default_locale": "en",
-  "background": {
-    "scripts": [
-      "src/bg/background.js"
-    ],
-    "persistent": false
-  },
-  "permissions": [
-    "https://f1tv.formula1.com/*/current-season/*,https://f1tv.formula1.com/*/archive/*"
-  ],
   "content_scripts": [
     {
       "matches": [
-        "https://www.google.com/*"
+        "https://f1tv.formula1.com/*/current-season/*",
+        "https://f1tv.formula1.com/*/archive/*"
       ],
       "js": [
-        "src/inject/inject.js"
+        "src/inject.js"
       ]
     }
+  ],
+  "web_accessible_resources": [
+    "src/cast.js",
+    "src/controls.js"
   ]
 }
