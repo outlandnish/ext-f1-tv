@@ -2,7 +2,7 @@
   "name": "F1 TV Playback Controls",
   "version": "0.0.1",
   "manifest_version": 2,
-  "description": "Makes F1 TV streams more accessible with modern playback controls",
+  "description": "Modern playback controls for F1 TV",
   "homepage_url": "http://outlandnish.com",
   "content_scripts": [
     {
