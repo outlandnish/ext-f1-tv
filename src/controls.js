@@ -48,3 +48,5 @@ window.addEventListener('keydown', event => {
   else if (event.key === 'End')
     player.currentTime = player.duration
 })
+
+console.log('Loaded F1 Playback Controls')
