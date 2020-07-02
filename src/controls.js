@@ -7,7 +7,7 @@ const volumeChange = 0.05				// 5% volume bump up / down
 // https://stackoverflow.com/questions/8599076/detect-if-html5-video-element-is-playing
 Object.defineProperty(HTMLMediaElement.prototype, 'playing', {
 	get: function(){
-			return !!(this.currentTime > 0 && !this.paused && !this.ended && this.readyState > 2);
+    return !!(this.currentTime > 0 && !this.paused && !this.ended && this.readyState > 2);
 	}
 })
 
