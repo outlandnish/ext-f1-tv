@@ -2,10 +2,24 @@ let launcher = null
 let castSession = null
 let remotePlayer = null
 let remotePlayerController = null
+let appId = 'E3F46EBD'
+
+// Cast API window callback
+window['__onGCastApiAvailable'] = isAvailable => {
+	console.log('Google Cast is available')
+	if (isAvailable)
+		initializeCastApi();
+}
+
+// add script element for Cast API
+const injectedCast = document.createElement('script')
+injectedCast.type = 'text/javascript'
+injectedCast.src = 'https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1'
+document.body.appendChild(injectedCast)
 
 const initializeCastApi = () => {
 	cast.framework.CastContext.getInstance().setOptions({
-		receiverApplicationId: chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID,
+		receiverApplicationId: appId,
 		autoJoinPolicy: chrome.cast.AutoJoinPolicy.ORIGIN_SCOPED
 	})
 
@@ -24,40 +38,36 @@ const initializeCastApi = () => {
 	})
 	
 	console.log('cast api initialized')
-	// loadMedia()
+	console.log('is live:', isLive)
+	console.log('stream url', streamUrl)
 }
-
-// Cast API
-window['__onGCastApiAvailable'] = isAvailable => {
-	console.log('Google Cast is available')
-	if (isAvailable)
-		initializeCastApi();
-}
-
-// add script element for Cast API
-const injectedCast = document.createElement('script')
-injectedCast.type = 'text/javascript'
-injectedCast.src = 'https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1'
-document.body.appendChild(injectedCast)
 
 const connectCastPlayer = async () => {
 	console.log('loading media')
 	castSession = cast.framework.CastContext.getInstance().getCurrentSession()
 
-	let mediaInfo = new chrome.cast.media.MediaInfo(player.src, 'application/x-mpegURL')
+	let streamUrlElement = document.querySelector('[data-channel-stream-url]')
+	if (streamUrlElement)
+		streamUrl = streamUrlElement.getAttribute('data-channel-stream-url')
+
+	console.log('stream url', streamUrl)
+	let mediaInfo = new chrome.cast.media.MediaInfo(streamUrl, 'application/x-mpegURL')
+	mediaInfo.streamType = isLive ? chrome.cast.media.StreamType.LIVE : chrome.cast.media.StreamType.BUFFERED
+	mediaInfo.customData = document.cookie
 	let request = new chrome.cast.media.LoadRequest(mediaInfo)
 	
-	try {
-		// await castSession.loadMedia(request)
-		castSession.loadMedia(request)
-			.then(() => { 
-				console.log('worked')
-				remotePlayerController.playOrPause()
-			}, errorCode => console.log(`Cast error loading media: ${errorCode}`))
+	castSession.loadMedia(request)
+		.then(() => {}, 
+		errorCode => console.log(`Cast error loading media: ${errorCode}`))
 
-		console.log('Cast loaded media')
-	}
-	catch (errorCode) {
-		console.log(`Cast error loading media: ${errorCode}`)
-	}
+	console.log('Cast loaded media')
+}
+
+document.addEventListener('stream-load', ({ detail: url }) => {
+	streamUrl = url
+	console.log('loaded stream tokenized url', currentSource)
+})
+
+function toggleCast() {
+	remotePlayerController.playOrPause()
 }

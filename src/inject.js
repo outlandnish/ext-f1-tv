@@ -5,12 +5,14 @@ const injectScript = source => {
 	document.body.appendChild(script)
 }
 
+injectScript(chrome.runtime.getURL('src/startup.js'))
+
 const injectScripts = () => {
 	// inject playback controls
 	injectScript(chrome.runtime.getURL('src/controls.js'))
 
 	// inject Cast API
-	// injectScript(chrome.runtime.getURL('src/cast.js'))
+	injectScript(chrome.runtime.getURL('src/cast.js'))
 }
 
 // observer callback that finds the video element
@@ -30,3 +32,10 @@ const videoFinder = (mutations, observer) => {
 
 const observer = new MutationObserver(videoFinder)
 observer.observe(document.getElementById('root'), { attributes: false, childList: true, subtree: true })
+
+// const messageListener = (request, sender, sendResponse) => {
+// 	if (request.sources)
+// 		chrome.tabs.executeScript({ code: loadSources(request.sources) })
+// }
+
+// chrome.runtime.onMessage.addListener(messageListener)

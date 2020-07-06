@@ -15,8 +15,15 @@
       ]
     }
   ],
+  "permissions": [    
+    "https://f1tv.formula1.com/*"
+  ],
   "web_accessible_resources": [
     "src/cast.js",
-    "src/controls.js"
-  ]
+    "src/controls.js",
+    "src/startup.js"
+  ],
+  "externally_connectable": {
+    "matches": ["https://f1tv.formula1.com/*"]
+  }
 }

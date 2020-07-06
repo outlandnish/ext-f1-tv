@@ -1,19 +1,17 @@
-const player = document.querySelector('video')
+// constants
 const seekSmall = 5							// 5 second jump on left / right arrows
 const seekLarge = 10						// 10 second jump on 'j'/ 'l' keys
 const volumeChange = 0.05				// 5% volume bump up / down
 
-// extension to video / audio tag to check if playing
-// https://stackoverflow.com/questions/8599076/detect-if-html5-video-element-is-playing
-Object.defineProperty(HTMLMediaElement.prototype, 'playing', {
-	get: function(){
-    return !!(this.currentTime > 0 && !this.paused && !this.ended && this.readyState > 2);
-	}
-})
+// video element in the DOM
+const player = document.querySelector('video')
+
+// more reliable to click this button instead of play / pause on the player
+const playPauseButton = document.getElementsByClassName('button play-pause-button')[0]
 
 window.addEventListener('keydown', event => {
   if (event.key === ' ')
-    player.playing ? player.pause() : player.play()
+    playPauseButton.click()
   else if (event.key === 'm')
     player.muted = !player.muted
   else if (event.key === 'j')
