@@ -1,4 +1,4 @@
-# ext-f1-tv 
+# F1 TV Playback Controls
 
 Modern playback controls for F1 TV. This extension for Chrome and Firefox gives you:
 
