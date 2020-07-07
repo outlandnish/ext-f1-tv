@@ -44,3 +44,9 @@ It's likely the token for the stream expired. To renew it, click on one of the o
 
 ### There's no touch controls for my Google Home! What gives?
 These haven't been implemented yet. It might be there in a future release!
+
+## Contributions
+This code is super quick and dirty / proof of concept level. It's ugly but gets the job done. Wanna make it better? Feel free to send in a PR!
+
+## Donations
+I built this extension for fun to learn more about building browser extensions. That said, it did take a bit of time (and a teeny bit of money). If you found it helpful, I'd appreciate any donations! You can contribute [here](https://paypal.me/nishanth)
