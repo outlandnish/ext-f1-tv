@@ -59,18 +59,19 @@ const connectCastPlayer = async () => {
 	console.log('stream url', streamUrl)
 	let mediaInfo = new chrome.cast.media.MediaInfo(streamUrl, 'application/x-mpegURL')
 	mediaInfo.streamType = isLive ? chrome.cast.media.StreamType.LIVE : chrome.cast.media.StreamType.BUFFERED
-	mediaInfo.duration = isLive ? null : localPlayer.duration
+	// mediaInfo.duration = isLive ? null : localPlayer.duration
 
 	mediaInfo.customData = document.cookie
 	let request = new chrome.cast.media.LoadRequest(mediaInfo)
-	request.currentTime = isLive ? null : localPlayer.currentTime
+	request.currentTime = isLive ? null : castSession.getMediaSession() ? remotePlayerTime : localPlayer.currentTime
 	
 	castSession.loadMedia(request)
 		.then(() => {
 			console.log('Media loaded')
 
 			castSession.getMediaSession().addUpdateListener(isAlive => {
-				remotePlayerTime = castSession.getMediaSession().getEstimatedTime()
+				if (isAlive)
+					remotePlayerTime = castSession.getMediaSession().getEstimatedTime()
 			})
 		}, 
 		errorCode => {
@@ -90,8 +91,8 @@ document.addEventListener('stream-load', ({ detail: url }) => {
 })
 
 function stopCasting() {
-	var castSession = cast.framework.CastContext.getInstance().getCurrentSession();
-  castSession.endSession(true);
+	var castSession = cast.framework.CastContext.getInstance().getCurrentSession()
+  castSession.endSession(true)
 }
 
 function updateUIForCast() {
