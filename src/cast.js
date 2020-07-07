@@ -34,10 +34,11 @@ const initializeCastApi = () => {
 		isCasting = event.value
 		console.log('connection change', isCasting)
 
-		if (isCasting) {
-			playOrPause()
+		playOrPause()
+		if (isCasting)
 			connectCastPlayer()
-		}
+		else 
+			localPlayer.currentTime = remotePlayerTime
 		updateUIForCast()
 	})
 	
@@ -67,6 +68,10 @@ const connectCastPlayer = async () => {
 	castSession.loadMedia(request)
 		.then(() => {
 			console.log('Media loaded')
+
+			castSession.getMediaSession().addUpdateListener(isAlive => {
+				remotePlayerTime = castSession.getMediaSession().getEstimatedTime()
+			})
 		}, 
 		errorCode => {
 			console.log(`Cast error loading media: ${errorCode}`)
@@ -85,7 +90,7 @@ document.addEventListener('stream-load', ({ detail: url }) => {
 })
 
 function stopCasting() {
-  var castSession = cast.framework.CastContext.getInstance().getCurrentSession();
+	var castSession = cast.framework.CastContext.getInstance().getCurrentSession();
   castSession.endSession(true);
 }
 
@@ -183,15 +188,7 @@ function updateTracks(session) {
 		)
 }
 
-// let mediaSession = castSession.getMediaSession()
-// let { media } = mediaSession
-
-// let allTracks = media.tracks
-// allTracks
-// 	.filter(t => media.activeTrackIds.includes(t.trackId))
-// 	.forEach(t => {
-// 		if (t.type === 'AUDIO')
-// 			audioTrack = t.trackId
-// 		else if (t.type === 'TEXT')
-// 			captionTrack = t.trackId
-// 	})
+const stopListener = () => {
+	localPlayer.currentTime = remotePlayerTime
+	castSession.removeUpdateListener(this)
+}

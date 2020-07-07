@@ -32,10 +32,3 @@ const videoFinder = (mutations, observer) => {
 
 const observer = new MutationObserver(videoFinder)
 observer.observe(document.getElementById('root'), { attributes: false, childList: true, subtree: true })
-
-// const messageListener = (request, sender, sendResponse) => {
-// 	if (request.sources)
-// 		chrome.tabs.executeScript({ code: loadSources(request.sources) })
-// }
-
-// chrome.runtime.onMessage.addListener(messageListener)

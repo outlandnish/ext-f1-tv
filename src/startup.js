@@ -1,18 +1,17 @@
-let audioTracks = []
-let channels = []
-let isLive = false
-let streamUrl = null
-let isCasting = false
-
 let localPlayer = null
 
 // cast variables
+let isLive = false
+let isCasting = false
+let closedCaptionsEnabled = false
+let streamUrl = null
 let launcher = null
 let castSession = null
 let remotePlayer = null
 let remotePlayerController = null
-let closedCaptionsEnabled = false
+let remotePlayerTime = 0
 
+// modifies the XMLHttpRequest so that we can view response bodies
 const modifyXHR = () => {
 	var XHR = XMLHttpRequest.prototype;
 	// Remember references to original methods
@@ -31,7 +30,7 @@ const modifyXHR = () => {
 	XHR.send = function(postData) {
 			let self = this
 			this.addEventListener('load', () => {
-				// shamelessly borrowed from https://github.com/ebrehault/repeat-after-me
+				// borrowed + modified from https://github.com/ebrehault/repeat-after-me
 				if(this._url) {
 					var responseHeaders = {};
 					this.getAllResponseHeaders().split('\n').forEach(header => {
@@ -73,17 +72,12 @@ const modifyXHR = () => {
 document.addEventListener('url-intercept', ({ detail }) => {
 	let { url, responseBody: response } = detail
 
-	if (url.indexOf('/global/commentary-tracks') >= 0)
-		audioTracks = response.objects
-	else if (url.indexOf('global/session-occurrence') >= 0) {
+	if (url.indexOf('global/session-occurrence') >= 0) {
 		if (response.session_type_url)
 			isLive = response.status !== 'replay'
-			
-		channels = []
 	}
-	else if (url.indexOf('/global/channels/chan_') >= 0)
-		channels.push(response)
 	else if (url.indexOf('/global/viewings') >= 0) {
+		// maybe use the username JWT to get tokenised stream urls manually?
 		const { tokenised_url, username } = response
 
 		if (tokenised_url) {
