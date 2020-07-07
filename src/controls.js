@@ -89,7 +89,7 @@ function setVolume(level) {
     remotePlayerController.setVolumeLevel()
   }
   else
-    Math.min(1.0, Math.max(level, 1.0))
+    localPlayer.volume = Math.min(1.0, Math.max(level, 1.0))
 }
 
 function muteOrUnmute() {
