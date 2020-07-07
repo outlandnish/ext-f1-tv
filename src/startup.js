@@ -1,8 +1,17 @@
-const videoSources = []
-const audioTracks = []
-const channels = []
+let audioTracks = []
+let channels = []
 let isLive = false
 let streamUrl = null
+let isCasting = false
+
+let localPlayer = null
+
+// cast variables
+let launcher = null
+let castSession = null
+let remotePlayer = null
+let remotePlayerController = null
+let closedCaptionsEnabled = false
 
 const modifyXHR = () => {
 	var XHR = XMLHttpRequest.prototype;
@@ -65,10 +74,12 @@ document.addEventListener('url-intercept', ({ detail }) => {
 	let { url, responseBody: response } = detail
 
 	if (url.indexOf('/global/commentary-tracks') >= 0)
-		languages = response.objects
+		audioTracks = response.objects
 	else if (url.indexOf('global/session-occurrence') >= 0) {
 		if (response.session_type_url)
 			isLive = response.status !== 'replay'
+			
+		channels = []
 	}
 	else if (url.indexOf('/global/channels/chan_') >= 0)
 		channels.push(response)

@@ -3,48 +3,147 @@ const seekSmall = 5							// 5 second jump on left / right arrows
 const seekLarge = 10						// 10 second jump on 'j'/ 'l' keys
 const volumeChange = 0.05				// 5% volume bump up / down
 
-// video element in the DOM
-const player = document.querySelector('video')
+// add playing check to video element
+Object.defineProperty(HTMLMediaElement.prototype, 'playing', {
+	get: function(){
+			return !!(this.currentTime > 0 && !this.paused && !this.ended && this.readyState > 2);
+	}
+})
 
-// more reliable to click this button instead of play / pause on the player
+// video element in the DOM
+localPlayer = document.querySelector('video')
+
+// more reliable to click this button instead of play / pause on the localPlayer
 const playPauseButton = document.getElementsByClassName('button play-pause-button')[0]
 
 window.addEventListener('keydown', event => {
   if (event.key === ' ')
-    playPauseButton.click()
+    playOrPause()
   else if (event.key === 'm')
-    player.muted = !player.muted
+    muteOrUnmute()
   else if (event.key === 'j')
-    player.currentTime -= seekLarge
+    seekDelta(seekLarge)
   else if (event.key === 'l')
-    player.currentTime += seekLarge
+    seekDelta(-seekLarge)
   else if (event.key === 'ArrowRight')
-    player.currentTime += seekSmall
+    seekDelta(seekSmall)
   else if (event.key === 'ArrowLeft')
-    player.currentTime -= seekSmall
+    seekDelta(-seekSmall)
   else if (event.key === '+' || event.key === '=')
-    player.volume = Math.min(1.0, player.volume + volumeChange)
+    incrementVolume(volumeChange)
   else if (event.key === '-' || event.key === '_')
-    player.volume = Math.max(0.0, player.volume - volumeChange)
+    incrementVolume(-volumeChange)
   else if (event.key === 'f') {
-    if (player.requestFullscreen) {
-      player.requestFullscreen();
-    } else if (player.mozRequestFullScreen) {
-      player.mozRequestFullScreen();
-    } else if (player.webkitRequestFullscreen) {
-      player.webkitRequestFullscreen();
-    } else if (player.msRequestFullscreen) { 
-      player.msRequestFullscreen();
+    if (localPlayer.requestFullscreen) {
+      localPlayer.requestFullscreen();
+    } else if (localPlayer.mozRequestFullScreen) {
+      localPlayer.mozRequestFullScreen();
+    } else if (localPlayer.webkitRequestFullscreen) {
+      localPlayer.webkitRequestFullscreen();
+    } else if (localPlayer.msRequestFullscreen) { 
+      localPlayer.msRequestFullscreen();
     }
   }
   else if (event.key >= '1' && event.key <= '9') {
     let percentage = parseInt(event.key) / 10
-    player.currentTime = percentage * player.duration
+    seekTo(percentage * localPlayer.duration)
   }
   else if (event.key === 'Home')
-    player.currentTime = 0
+    seekTo(0)
   else if (event.key === 'End')
-    player.currentTime = player.duration
+    seekTo(localPlayer.duration)
 })
+
+function playOrPause() {
+  if (isCasting)
+    remotePlayerController.playOrPause()
+  else
+    playPauseButton.click()
+}
+
+function seekDelta(delta) {
+  if (isCasting) {
+    remotePlayer.currentTime += delta
+    remotePlayerController.seek()
+  }
+  else
+    localPlayer.currentTime += delta
+}
+
+function seekTo(where) {
+  if (isCasting) {
+    remotePlayer.currentTime = where
+    remotePlayerController.seek()
+  }
+  else
+    localPlayer.currentTime = where
+}
+
+function incrementVolume(delta) {
+  setVolume(remotePlayer.volumeLevel + delta)
+}
+
+function setVolume(level) {
+  if (isCasting) {
+    remotePlayer.volumeLevel = level
+    remotePlayerController.setVolumeLevel()
+  }
+  else
+    Math.min(1.0, Math.max(level, 1.0))
+}
+
+function muteOrUnmute() {
+  if (isCasting)
+    remotePlayerController.muteOrUnmute()
+  else
+    localPlayer.muted = !localPlayer.muted
+}
+
+localPlayer.addEventListener('timeupdate', event => {
+  if (isCasting) {
+    if (localPlayer.playing)
+      playPauseButton.click()
+    
+    seekTo(localPlayer.currentTime)
+  }
+})
+
+const audioTrackSelectListener = (event) => {
+  let element = event.target
+
+  if (isCasting) {    
+    let trackName = element.innerText
+    updateAudioTrack(trackName)
+  }
+}
+
+const videoObserver = (mutations, observer) => {
+	for (let mutation of mutations) {
+    // watch for clicks on the differnt audio tracks
+		if (mutation.addedNodes && mutation.addedNodes.length > 0 && mutation.addedNodes[0].className === 'audio-track') {
+      let node = mutation.addedNodes[0]
+      node.addEventListener('click', audioTrackSelectListener)
+    }
+
+    // watch for closed captioning toggles
+    else if (mutation.target.className.indexOf('controlbar-container 0') >= 0) {
+      let radio = document.querySelector('[name=ccOn]')
+      let trackName = document.querySelector('select').value
+
+      // only if toggle has changed / track has changed
+      if (radio && (closedCaptionsEnabled !== !radio.checked || (lastCaptionTrack !== captionTrack) && closedCaptionsEnabled)) {
+        closedCaptionsEnabled = !radio.checked
+        console.log('update close captions', closedCaptionsEnabled)
+
+        if (isCasting) {
+          updateCaptionTrack(trackName)
+        }
+      }
+    }
+  }
+}
+
+const observer = new MutationObserver(videoObserver)
+observer.observe(document.getElementById('html5-player'), { attributes: false, childList: true, subtree: true })
 
 console.log('Loaded F1 Playback Controls')

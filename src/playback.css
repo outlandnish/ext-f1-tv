@@ -1,0 +1,11 @@
+#cast-shade {
+  font-family: 'Formula Regular', 'sans-serif';
+  color: #b8b8bb;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.cast-shade-title {
+  font-size: 16px;
+  font-family: 'Formula Bold'
+}

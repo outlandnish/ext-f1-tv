@@ -1,6 +1,9 @@
 # ext-f1-tv 
 
-Chromium / Firefox extension to give you modern playback controls for F1 TV streams. You can use the following YouTube style shortcuts:
+Modern playback controls for F1 TV. This extension for Chrome and Firefox gives you:
+
+- YouTube style playback controls
+- Google Cast support
 
 ## Installation
 
@@ -20,3 +23,9 @@ Chromium / Firefox extension to give you modern playback controls for F1 TV stre
 - __[1]...[9]__: skip to 10...90% of the video
 - __[home]__: seek to the start of video
 - __[end]__: seek to the end of the video
+
+## Known Issues
+
+- Mute button in UI is not synced with mute / unmute from keyboard
+- Volume control in UI is not synced with volume changes from keyboard
+- Mute / volume controls in UI do nothing for Google Cast

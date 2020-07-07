@@ -1,9 +1,15 @@
 {
   "name": "F1 TV Playback Controls",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "manifest_version": 2,
-  "description": "Modern playback controls for F1 TV",
+  "description": "Modern playback controls and Google Cast support for F1 TV",
   "homepage_url": "http://outlandnish.com",
+  "icons": {
+    "16": "icons/icon16.png",
+    "19": "icons/icon19.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
   "content_scripts": [
     {
       "matches": [
@@ -12,6 +18,9 @@
       ],
       "js": [
         "src/inject.js"
+      ],
+      "css": [
+        "src/playback.css"
       ]
     }
   ],
@@ -21,7 +30,8 @@
   "web_accessible_resources": [
     "src/cast.js",
     "src/controls.js",
-    "src/startup.js"
+    "src/startup.js",
+    "src/playback.css"
   ],
   "externally_connectable": {
     "matches": ["https://f1tv.formula1.com/*"]
