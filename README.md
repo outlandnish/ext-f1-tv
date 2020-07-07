@@ -40,17 +40,17 @@ Modern playback controls for F1 TV. This extension for Chrome and Firefox gives 
 ### I've got the extension. How do I cast?
 Right click on the video and click 'Cast media to device'
 
-### When I cast, it just mirrors my screen instead of casting the video. How can I fix this?
+### How can I cast from Firefox?
+Unfortunately, Google no longer has an extension for Cast outside of Chromium browsers :/ That said, the playback controls still work in Firefox and Cast supposedly works on Firefox for Android.
+
+### When I cast, it mirrors my screen instead of casting the video. How can I fix this?
 Your Google Cast device needs to pull the new config that supports the Google Cast receiver for F1 TV. Power cycle / reboot your Cast device and it should pick up the F1 TV Cast Receiver
 
-### I see a blank screen that says F1 TV (Unofficial) but the video does not load. How can I fix this?
+### I see a blank screen that says F1 TV (Unofficial) but the video does not load.
 It's likely the token for the stream expired. To renew it, click on one of the other video tracks (like a driver stream) and then click back to the video track you were watching. It should load properly then.
 
 ### There's no touch controls for my Google Home! What gives?
 These haven't been implemented yet. It might be there in a future release!
-
-### How can I cast from Firefox?
-Unfortunately, Google no longer has an extension for Cast outside of Chromium browsers :/ That said, the playback controls still work in Firefox and Cast supposedly works on Firefox for Android.
 
 ## Contributions
 This code is super quick and dirty / proof of concept level. It's ugly but gets the job done. Wanna make it better? Feel free to send in a PR!
