@@ -45,6 +45,9 @@ It's likely the token for the stream expired. To renew it, click on one of the o
 ### There's no touch controls for my Google Home! What gives?
 These haven't been implemented yet. It might be there in a future release!
 
+### How can I cast from Firefox?
+Unfortunately, Google no longer has an extension for Cast outside of Chromium browsers :/ That said, the playback controls still work in Firefox and Cast supposedly works on Firefox for Android.
+
 ## Contributions
 This code is super quick and dirty / proof of concept level. It's ugly but gets the job done. Wanna make it better? Feel free to send in a PR!
 
