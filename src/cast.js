@@ -59,7 +59,13 @@ const connectCastPlayer = async () => {
 	console.log('stream url', streamUrl)
 	let mediaInfo = new chrome.cast.media.MediaInfo(streamUrl, 'application/x-mpegURL')
 	mediaInfo.streamType = isLive ? chrome.cast.media.StreamType.LIVE : chrome.cast.media.StreamType.BUFFERED
-	// mediaInfo.duration = isLive ? null : localPlayer.duration
+	mediaInfo.duration = isLive ? null : localPlayer.duration
+	mediaInfo.metadata = {
+		metaDataType: 0,
+		title: title,
+		subtitle: subtitle,
+		releaseDate: mediaDate
+	}
 
 	mediaInfo.customData = document.cookie
 	let request = new chrome.cast.media.LoadRequest(mediaInfo)

@@ -11,6 +11,10 @@ let remotePlayer = null
 let remotePlayerController = null
 let remotePlayerTime = 0
 
+let title = null
+let subtitle = null
+let mediaDate = null
+
 // modifies the XMLHttpRequest so that we can view response bodies
 const modifyXHR = () => {
 	var XHR = XMLHttpRequest.prototype;
@@ -73,8 +77,15 @@ document.addEventListener('url-intercept', ({ detail }) => {
 	let { url, responseBody: response } = detail
 
 	if (url.indexOf('global/session-occurrence') >= 0) {
-		if (response.session_type_url)
+		if (response.session_type_url) {
 			isLive = response.status !== 'replay'
+			title = response.session_name
+
+			if (response.eventoccurrence_url)
+				subtitle = response.eventoccurrence_url.official_name
+			
+			mediaDate = response.editorial_start_time
+		}
 	}
 	else if (url.indexOf('/global/viewings') >= 0) {
 		// maybe use the username JWT to get tokenised stream urls manually?
