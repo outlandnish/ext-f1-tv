@@ -37,6 +37,9 @@ Modern playback controls for F1 TV. This extension for Chrome and Firefox gives 
 
 ## FAQ + Troubleshooting
 
+### The playback controls aren't responding
+Sometimes the browser doesn't load the page for some odd reason. Refresh the page and it should start working again.
+
 ### I've got the extension. How do I cast?
 Right click on the video and click 'Cast media to device'
 
