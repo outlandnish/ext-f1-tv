@@ -5,6 +5,10 @@ Modern playback controls for F1 TV. This extension for Chrome and Firefox gives 
 - YouTube style playback controls
 - Google Cast support (via the [F1 TV Google Cast Receiver](https://github.com/outlandnish/f1tv-cast-receiver))
 
+[![Download from Chrome Web Store](https://developer.chrome.com/webstore/images/ChromeWebStore_Badge_v2_206x58.png 'Available in the Chrome Web Store')](https://chrome.google.com/webstore/detail/f1-tv-playback-controls/bndmmpkkilmcaoddlicjenjffkihmmle?hl=en)
+
+[![Get the Add-On](https://ffp4g1ylyit3jdyti1hqcvtb-wpengine.netdna-ssl.com/addons/files/2015/11/get-the-addon.png 'Get the Add-On')](https://addons.mozilla.org/en-US/android/addon/f1-tv-playback-controls/)
+
 ## Installation
 
 1. Go to your browser's developer mode page: `about://extensions` on a Chromium browser and `about://debugging` on Firefox
@@ -36,20 +40,20 @@ Modern playback controls for F1 TV. This extension for Chrome and Firefox gives 
 ### I've got the extension. How do I cast?
 Right click on the video and click 'Cast media to device'
 
-### When I cast, it just mirrors my screen instead of casting the video. How can I fix this?
+### How can I cast from Firefox?
+Unfortunately, Google no longer has an extension for Cast outside of Chromium browsers :/ That said, the playback controls still work in Firefox and Cast supposedly works on Firefox for Android.
+
+### When I cast, it mirrors my screen instead of casting the video. How can I fix this?
 Your Google Cast device needs to pull the new config that supports the Google Cast receiver for F1 TV. Power cycle / reboot your Cast device and it should pick up the F1 TV Cast Receiver
 
-### I see a blank screen that says F1 TV (Unofficial) but the video does not load. How can I fix this?
+### I see a blank screen that says F1 TV (Unofficial) but the video does not load.
 It's likely the token for the stream expired. To renew it, click on one of the other video tracks (like a driver stream) and then click back to the video track you were watching. It should load properly then.
 
 ### There's no touch controls for my Google Home! What gives?
 These haven't been implemented yet. It might be there in a future release!
 
-### How can I cast from Firefox?
-Unfortunately, Google no longer has an extension for Cast outside of Chromium browsers :/ That said, the playback controls still work in Firefox and Cast supposedly works on Firefox for Android.
-
 ## Contributions
 This code is super quick and dirty / proof of concept level. It's ugly but gets the job done. Wanna make it better? Feel free to send in a PR!
 
-## Donations
+## [Donations](https://paypal.me/nishanth)
 I built this extension for fun to learn more about building browser extensions. That said, it did take a bit of time (and a teeny bit of money). If you found it helpful, I'd appreciate any donations! You can contribute [here](https://paypal.me/nishanth)
