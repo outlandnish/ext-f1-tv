@@ -1,6 +1,6 @@
 {
   "name": "F1 TV Playback Controls",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "manifest_version": 2,
   "description": "Modern playback controls and Google Cast support for F1 TV",
   "homepage_url": "http://outlandnish.com",
@@ -12,21 +12,12 @@
   },
   "content_scripts": [
     {
-      "matches": [
-        "https://f1tv.formula1.com/*/current-season/*",
-        "https://f1tv.formula1.com/*/archive/*"
-      ],
-      "js": [
-        "src/inject.js"
-      ],
-      "css": [
-        "src/playback.css"
-      ]
+      "matches": [ "https://f1tv.formula1.com/*" ],
+      "js": [ "src/inject.js" ],
+      "css": [ "src/playback.css" ]
     }
   ],
-  "permissions": [    
-    "https://f1tv.formula1.com/*"
-  ],
+  "permissions": [ "https://f1tv.formula1.com/*" ],
   "web_accessible_resources": [
     "src/cast.js",
     "src/controls.js",

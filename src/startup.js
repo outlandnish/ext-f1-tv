@@ -17,17 +17,17 @@ let mediaDate = null
 
 // modifies the XMLHttpRequest so that we can view response bodies
 const modifyXHR = () => {
-	var XHR = XMLHttpRequest.prototype;
+	var XHR = XMLHttpRequest.prototype
 	// Remember references to original methods
-	var open = XHR.open;
-	var send = XHR.send;
+	var open = XHR.open
+	var send = XHR.send
 
 	// Overwrite native methods
 	// Collect data: 
 	XHR.open = function(method, url) {
 			this._method = method;
 			this._url = url;
-			return open.apply(this, arguments);
+			return open.apply(this, arguments)
 	};
 
 	// Implement "ajaxSuccess" functionality
@@ -69,8 +69,8 @@ const modifyXHR = () => {
 			}
 		})
 
-		return send.apply(this, arguments);	
-	};
+		return send.apply(this, arguments);
+	}
 }
 
 document.addEventListener('url-intercept', ({ detail }) => {
@@ -78,7 +78,7 @@ document.addEventListener('url-intercept', ({ detail }) => {
 
 	if (url.indexOf('global/session-occurrence') >= 0) {
 		if (response.session_type_url) {
-			isLive = response.status !== 'replay'
+			isLive = response.status === 'live'
 			title = response.session_name
 
 			if (response.eventoccurrence_url)
@@ -87,7 +87,7 @@ document.addEventListener('url-intercept', ({ detail }) => {
 			mediaDate = response.editorial_start_time
 		}
 	}
-	else if (url.indexOf('/global/viewings') >= 0) {
+	else if (url.indexOf('global/viewings') >= 0) {
 		// maybe use the username JWT to get tokenised stream urls manually?
 		const { tokenised_url, username } = response
 

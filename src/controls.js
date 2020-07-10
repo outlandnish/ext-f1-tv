@@ -57,7 +57,7 @@ window.addEventListener('keydown', event => {
 function playOrPause() {
   if (isCasting)
     remotePlayerController.playOrPause()
-  else
+  else if (playPauseButton)
     playPauseButton.click()
 }
 
@@ -99,9 +99,11 @@ function muteOrUnmute() {
     localPlayer.muted = !localPlayer.muted
 }
 
+// handle user seeking with the UI progress bar
 localPlayer.addEventListener('timeupdate', event => {
-  if (isCasting) {
-    if (localPlayer.playing)
+  // only update if we're casting and not viewing live video
+  if (isCasting && !isLive) {
+    if (localPlayer.playing && playPauseButton)
       playPauseButton.click()
     
     seekTo(localPlayer.currentTime)
