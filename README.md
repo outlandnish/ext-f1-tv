@@ -52,9 +52,6 @@ Your Google Cast device needs to pull the new config that supports the Google Ca
 ### I see a blank screen that says F1 TV (Unofficial) but the video does not load.
 It's likely the token for the stream expired. To renew it, click on one of the other video tracks (like a driver stream) and then click back to the video track you were watching. It should load properly then.
 
-### There's no touch controls for my Google Home! What gives?
-These haven't been implemented yet. It might be there in a future release!
-
 ## Contributions
 This code is super quick and dirty / proof of concept level. It's ugly but gets the job done. Wanna make it better? Feel free to send in a PR!
 
