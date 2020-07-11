@@ -9,3 +9,25 @@
   font-size: 16px;
   font-family: 'Formula Bold'
 }
+
+google-cast-launcher {
+  width: 20px;
+  display: flex;
+  position: absolute;
+  transform: translateY(-50%);
+  right: 28px;
+  top: 50%;
+  cursor: pointer;
+}
+
+google-cast-launcher:hover {
+  --disconnected-color: white;
+  --connected-color: white;
+}  
+
+@media(max-width:959px) {
+  google-cast-launcher {
+    transform: unset;
+    top: 70%;
+  }
+}

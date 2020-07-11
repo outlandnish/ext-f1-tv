@@ -23,9 +23,7 @@ const initializeCastApi = () => {
 	})
 
 	launcher = document.createElement('google-cast-launcher')
-	launcher.style.width = '18px'
-	launcher.style.marginTop = '9px'
-	const playerRight = document.getElementsByClassName('cb-right-items')[0]
+	const playerRight = document.getElementsByClassName('downstairs')[0]
 	playerRight.appendChild(launcher)
 
 	remotePlayer = new cast.framework.RemotePlayer()
