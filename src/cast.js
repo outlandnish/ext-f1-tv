@@ -69,7 +69,7 @@ const connectCastPlayer = async () => {
 
 	mediaInfo.customData = document.cookie
 	let request = new chrome.cast.media.LoadRequest(mediaInfo)
-	request.currentTime = isLive ? null : castSession.getMediaSession() ? remotePlayerTime : localPlayer.currentTime
+	request.currentTime = castSession.getMediaSession() ? remotePlayerTime : localPlayer.currentTime
 	
 	castSession.loadMedia(request)
 		.then(() => {
