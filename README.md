@@ -11,10 +11,11 @@ Modern playback controls for F1 TV. This extension for Chrome and Firefox gives 
 
 ## Installation
 
-1. Go to your browser's developer mode page: `about://extensions` on a Chromium browser and `about://debugging` on Firefox
-2. Enable Developer Mode
-3. `Load unpacked extension` on a Chromium browser and `Load Temporary Add-on` in Firefox. For Firefox, select any file in the folder and it will load the extension
-4. Enjoy!
+1. Clone this repository or download it as a zip file
+2. Go to your browser's developer mode page: `about://extensions` on a Chromium browser and `about://debugging` on Firefox
+3. Enable Developer Mode
+4. `Load unpacked extension` on a Chromium browser and `Load Temporary Add-on` in Firefox. For Firefox, select any file in the folder and it will load the extension
+5. Enjoy!
 
 ## Usage
 
