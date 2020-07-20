@@ -28,6 +28,7 @@ Modern playback controls for F1 TV. This extension for Chrome and Firefox gives 
 - __[1]...[9]__: skip to 10%...90% of the video
 - __[home]__: seek to the start of video
 - __[end]__: seek to the end of the video
+- __[s]__: sync video across tabs
 
 ## Known Issues
 
