@@ -34,6 +34,7 @@ Modern playback controls for F1 TV. This extension for Chrome and Firefox gives 
 - Volume control in UI is not synced with volume changes from keyboard
 - Mute / volume controls in UI do nothing for Google Cast
 - If video source is cast some time after loading, the token to access the stream expires. Click on a different stream and click back for it to load.
+- If the computer used to cast is resumed from sleep during a cast, the stream reloads
 
 ## FAQ + Troubleshooting
 

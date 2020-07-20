@@ -1,3 +1,12 @@
+const extensionId = chrome.runtime.id
+
+// inject extension id and tab id
+let idScript = document.createElement('script')
+idScript.setAttribute('type', 'text/javascript')
+idScript.innerText = `
+	const extensionId = '${extensionId}'`
+document.head.appendChild(idScript)
+
 const injectScript = source => {
 	const script = document.createElement('script')
 	script.setAttribute('type', 'text/javascript')
@@ -32,3 +41,18 @@ const videoFinder = (mutations, observer) => {
 
 const observer = new MutationObserver(videoFinder)
 observer.observe(document.getElementById('root'), { attributes: false, childList: true, subtree: true })
+
+// chrome.runtime.onMessageExternal.addListener(
+//   (request, sender, sendResponse) => {
+//     console.log(sender.tab ?
+//       "from a content script:" + sender.tab.url :
+//       "from the extension")
+
+//     if (request.message === 'cast-update') {
+//       castingActive = request.casting
+//       sendResponse({ result: 'updated cast state', casting: castingActive })
+//     }
+//     else if (request.message === 'cast-query')
+//       sendResponse({ result: 'checked cast state', casting: castingActive })
+//   }
+// )

@@ -1,3 +1,4 @@
+console.log('injected extension id', extensionId)
 let localPlayer = null
 
 // cast variables

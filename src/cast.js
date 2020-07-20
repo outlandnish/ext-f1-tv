@@ -7,7 +7,7 @@ let lastCaptionTrack = null
 window['__onGCastApiAvailable'] = isAvailable => {
 	console.log('Google Cast is available')
 	if (isAvailable)
-		initializeCastApi();
+		initializeCastApi()
 }
 
 // add script element for Cast API
@@ -29,15 +29,26 @@ const initializeCastApi = () => {
 	remotePlayer = new cast.framework.RemotePlayer()
 	remotePlayerController = new cast.framework.RemotePlayerController(remotePlayer)
 	remotePlayerController.addEventListener(cast.framework.RemotePlayerEventType.IS_CONNECTED_CHANGED, event => {
-		isCasting = event.value
 		console.log('connection change', isCasting)
+		chrome.runtime.sendMessage(extensionId, { message: 'cast-query' }, response => {
+			if (response.canCast) {
+				isCasting = event.value
 
-		playOrPause()
-		if (isCasting)
-			connectCastPlayer()
-		else 
-			localPlayer.currentTime = remotePlayerTime
-		updateUIForCast()
+				// pause local video
+				playOrPause()
+
+				// if connected, startup player
+				if (isCasting)
+					safeChangeCast()
+				// if disconnected, update local player time
+				else {
+					localPlayer.currentTime = remotePlayerTime
+					chrome.runtime.sendMessage(extensionId, { message: 'cast-update', streamUrl: null }, response => console.log('casting update', response.casting))
+				}
+
+				updateUIForCast()
+			}
+		})
 	})
 	
 	console.log('cast api initialized')
@@ -67,32 +78,47 @@ const connectCastPlayer = async () => {
 
 	mediaInfo.customData = document.cookie
 	let request = new chrome.cast.media.LoadRequest(mediaInfo)
-	request.currentTime = castSession.getMediaSession() ? remotePlayerTime : localPlayer.currentTime
+	if (castSession) {
+		request.currentTime = castSession.getMediaSession() ? remotePlayerTime : localPlayer.currentTime
 	
-	castSession.loadMedia(request)
-		.then(() => {
-			console.log('Media loaded')
+		castSession.loadMedia(request)
+			.then(() => {
+				console.log('Media loaded')
 
-			castSession.getMediaSession().addUpdateListener(isAlive => {
-				if (isAlive)
-					remotePlayerTime = castSession.getMediaSession().getEstimatedTime()
+				castSession.getMediaSession().addUpdateListener(isAlive => {
+					if (isAlive)
+						remotePlayerTime = castSession.getMediaSession().getEstimatedTime()
+				})
+
+				chrome.runtime.sendMessage(extensionId, { message: 'cast-update', streamUrl: streamUrl }, response => console.log('casting', response.casting))
+			}, 
+			errorCode => {
+				console.log(`Cast error loading media: ${errorCode}`)
+				updateUIForCast()
 			})
-		}, 
-		errorCode => {
-			console.log(`Cast error loading media: ${errorCode}`)
-			isCasting = false
-			updateUIForCast()
-		})
+	}
 }
 
 document.addEventListener('stream-load', ({ detail: url }) => {
+	console.log('loaded stream tokenized url', url)
 	streamUrl = url
-	console.log('loaded stream tokenized url', streamUrl)
 
-	// load new stream
-	if (isCasting)
-		connectCastPlayer()
+	safeChangeCast()
 })
+
+function safeChangeCast() {
+	let mediaUrl = streamUrl.substring(0, streamUrl.indexOf('?'))
+	chrome.runtime.sendMessage(extensionId, { message: 'cast-query', streamUrl: mediaUrl }, response => {
+		console.log('cast query result', response)
+		if (response.canCast && response.isNewStreamUrl) {
+			connectCastPlayer()
+			console.log('updating cast')
+		}
+		else {
+			console.log('not updating cast')
+		}
+	})
+}
 
 function stopCasting() {
 	var castSession = cast.framework.CastContext.getInstance().getCurrentSession()
