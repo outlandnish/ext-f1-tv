@@ -17,8 +17,7 @@
       "css": [ "src/playback.css" ]
     }
   ],
-  "permissions": [ 
-    "tabs",
+  "permissions": [
     "https://f1tv.formula1.com/*" 
   ],
   "web_accessible_resources": [
