@@ -1,6 +1,7 @@
 const extensionId = 'bndmmpkkilmcaoddlicjenjffkihmmle'
 let castingTab = null
 let streamUrl = null
+let ports = {}
 
 chrome.runtime.onMessageExternal.addListener(
   (request, sender, sendResponse) => {
@@ -25,3 +26,20 @@ chrome.runtime.onMessageExternal.addListener(
     }
   }
 )
+
+chrome.runtime.onConnectExternal.addListener(port => {
+  console.log('port created', port)
+  if (!ports[port.name]) ports[port.name] = []
+  ports[port.name].push(port)
+
+  // sending sync messages
+  port.onMessage.addListener(message => {
+    if (message.sync)
+      ports[port.name].filter(p => p !== port).forEach(p => p.postMessage(message))
+  })
+
+  port.onDisconnect.addListener(() => {
+    let index = ports[port.name].indexOf(port)
+    ports[port.name].splice(index, 1)
+  })
+})

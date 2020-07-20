@@ -16,6 +16,8 @@ let title = null
 let subtitle = null
 let mediaDate = null
 
+let port = null
+
 // modifies the XMLHttpRequest so that we can view response bodies
 const modifyXHR = () => {
 	var XHR = XMLHttpRequest.prototype

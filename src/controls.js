@@ -52,6 +52,8 @@ window.addEventListener('keydown', event => {
     seekTo(0)
   else if (event.key === 'End')
     seekTo(localPlayer.duration)
+  else if (event.key === 's')
+    syncUp()
 })
 
 function playOrPause() {
@@ -145,7 +147,24 @@ const videoObserver = (mutations, observer) => {
   }
 }
 
+function syncUp() {
+  let timeToSeek = isCasting ? remotePlayer.currentTime : localPlayer.currentTime
+  console.log('send sync request')
+  if (port) port.postMessage({ sync: timeToSeek })
+}
+
+function getURLPath() {
+  return window.location.href.split('?')[0]
+}
+
 const observer = new MutationObserver(videoObserver)
 observer.observe(document.getElementById('html5-player'), { attributes: false, childList: true, subtree: true })
+
+port = chrome.runtime.connect(extensionId, { name: getURLPath() })
+port.onMessage.addListener(message => {
+  console.log('message received', message)
+  if (message.sync)
+    seekTo(message.sync)
+})
 
 console.log('Loaded F1 Playback Controls')
