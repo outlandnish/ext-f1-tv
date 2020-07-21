@@ -29,26 +29,40 @@ const initializeCastApi = () => {
 	remotePlayer = new cast.framework.RemotePlayer()
 	remotePlayerController = new cast.framework.RemotePlayerController(remotePlayer)
 	remotePlayerController.addEventListener(cast.framework.RemotePlayerEventType.IS_CONNECTED_CHANGED, event => {
-		console.log('connection change', isCasting)
-		chrome.runtime.sendMessage(extensionId, { message: 'cast-query' }, response => {
-			if (response.canCast) {
-				isCasting = event.value
+		if (remotePlayer.isConnected) {
+			let shouldUpdate = true
 
-				// pause local video
-				playOrPause()
+			chrome.runtime.sendMessage(extensionId, { message: 'cast-query', streamUrl: streamUrl }, response => {
+				shouldUpdate = response.canCast && response.isNewStreamUrl
 
-				// if connected, startup player
-				if (isCasting)
+				if (shouldUpdate) {
+					// pause local player
+					playOrPause()
+	
+					// update cast
 					safeChangeCast()
-				// if disconnected, update local player time
-				else {
-					localPlayer.currentTime = remotePlayerTime
+				}
+			})
+		}
+		else {
+			isCasting = false
+			localPlayer.currentTime = remotePlayerTime
+			playOrPause()
+
+			// hackiness to get around connection change toggle after computer resumes from sleep
+			// toggle takes roughly 500ms, using 1000ms to be safe
+			setTimeout(() => {
+				if (!remotePlayer.isConnected) {
+					console.log('unsetting cast tab')
 					chrome.runtime.sendMessage(extensionId, { message: 'cast-update', streamUrl: null }, response => console.log('casting update', response.casting))
 				}
-
-				updateUIForCast()
-			}
-		})
+				else {
+					playOrPause()
+					// localPlayer.currentTime = remotePlayerTime
+					isCasting = true
+				}
+			}, 1000)
+		}
 	})
 	
 	console.log('cast api initialized')
@@ -90,11 +104,11 @@ const connectCastPlayer = async () => {
 						remotePlayerTime = castSession.getMediaSession().getEstimatedTime()
 				})
 
+				isCasting = true
 				chrome.runtime.sendMessage(extensionId, { message: 'cast-update', streamUrl: streamUrl }, response => console.log('casting', response.casting))
 			}, 
 			errorCode => {
 				console.log(`Cast error loading media: ${errorCode}`)
-				updateUIForCast()
 			})
 	}
 }
@@ -107,7 +121,7 @@ document.addEventListener('stream-load', ({ detail: url }) => {
 })
 
 function safeChangeCast() {
-	let mediaUrl = streamUrl.substring(0, streamUrl.indexOf('?'))
+	let mediaUrl = streamUrl.split('?')[0]
 	chrome.runtime.sendMessage(extensionId, { message: 'cast-query', streamUrl: mediaUrl }, response => {
 		console.log('cast query result', response)
 		if (response.canCast && response.isNewStreamUrl) {
@@ -123,32 +137,6 @@ function safeChangeCast() {
 function stopCasting() {
 	var castSession = cast.framework.CastContext.getInstance().getCurrentSession()
   castSession.endSession(true)
-}
-
-function updateUIForCast() {
-	let shade = document.getElementById('cast-shade')
-	let description = document.getElementsByClassName('_1WHOy')[1]
-
-	if (!shade) {
-		shade = document.createElement('div')
-		shade.id = 'cast-shade'
-		shade.innerHTML = `
-			<div class="cast-shade-content">
-				<h3 class="cast-shade-title">CASTING VIDEO</h3>
-				<button onclick="stopCasting()">Stop Casting</button>
-			</div>
-		`
-		description.appendChild(shade)
-	}
-
-	if (isCasting) {
-		// player.style.display = 'none'
-		shade.style.display = 'block'
-	}
-	else {
-		// player.style.display = 'block'
-		shade.style.display = 'none'
-	}
 }
 
 function updateAudioTrack(trackName) {

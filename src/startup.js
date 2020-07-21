@@ -92,9 +92,20 @@ document.addEventListener('url-intercept', ({ detail }) => {
 	}
 	else if (url.indexOf('global/viewings') >= 0) {
 		// maybe use the username JWT to get tokenised stream urls manually?
-		const { tokenised_url, username } = response
+		const { tokenised_url, username, objects } = response
 
-		if (tokenised_url) {
+		// for old F1 VODs
+		if (objects) {
+			for (let obj of objects) {
+				if (obj.tata) {
+					document.dispatchEvent(new CustomEvent('stream-load', { detail: obj.tata.tokenised_url }))
+					streamUrl = obj.tata.tokenised_url
+					break
+				}
+			}
+		}
+		// for newer streams
+		else if (tokenised_url) {
 			document.dispatchEvent(new CustomEvent('stream-load', { detail: tokenised_url }))
 			streamUrl = tokenised_url
 		}
