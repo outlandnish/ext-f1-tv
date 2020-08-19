@@ -29,9 +29,9 @@ window.addEventListener('keydown', event => {
     seekDelta(seekSmall)
   else if (event.key === 'ArrowLeft')
     seekDelta(-seekSmall)
-  else if (event.key === '+' || event.key === '=')
+  else if (event.key === 'ArrowUp')
     incrementVolume(volumeChange)
-  else if (event.key === '-' || event.key === '_')
+  else if (event.key === 'ArrowDown')
     incrementVolume(-volumeChange)
   else if (event.key === 'f') {
     if (localPlayer.requestFullscreen) {

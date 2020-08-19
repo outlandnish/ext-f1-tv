@@ -21,7 +21,7 @@ Modern playback controls for F1 TV. This extension for Chrome and Firefox gives 
 
 - __[space]__: pause / play the video
 - __m__: mute / unmute the video
-- __+__ / __-__: increment / decrement the volume by 5%
+- __[up arrow__ / __[down arrow]__: increment / decrement the volume by 5%
 - __[left arrow]__ / __[right arrow]__: backward / forward by 5 seconds
 - __j__ / __l__: backward / forward by 10 seconds
 - __f__: fullscreen
