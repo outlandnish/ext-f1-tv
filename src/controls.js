@@ -5,9 +5,9 @@ const volumeChange = 0.05				// 5% volume bump up / down
 
 // add playing check to video element
 Object.defineProperty(HTMLMediaElement.prototype, 'playing', {
-	get: function(){
-			return !!(this.currentTime > 0 && !this.paused && !this.ended && this.readyState > 2);
-	}
+  get: function(){
+      return !!(this.currentTime > 0 && !this.paused && !this.ended && this.readyState > 2);
+  }
 })
 
 // video element in the DOM
@@ -57,8 +57,12 @@ window.addEventListener('keydown', event => {
 })
 
 function playOrPause() {
-  if (isCasting)
+  if (isCasting) {
     remotePlayerController.playOrPause()
+
+    // use play or pause events to sync the local player
+    localPlayer.currentTime = remotePlayer.currentTime
+  }
   else if (playPauseButton)
     playPauseButton.click()
 }
@@ -79,6 +83,18 @@ function seekTo(where) {
   }
   else
     localPlayer.currentTime = where
+}
+
+/* 
+  syncUp code has been moved to inject.js to work reliably on Firefox
+  sets an attribute once sync updates are made in cast mode to communicate
+  between isolate worlds
+*/
+function syncUp() {
+  if (isCasting)
+    localPlayer.currentTime = remotePlayer.currentTime
+
+  localPlayer.setAttribute('sync', localPlayer.currentTime)
 }
 
 function incrementVolume(delta) {
@@ -122,9 +138,9 @@ const audioTrackSelectListener = (event) => {
 }
 
 const videoObserver = (mutations, observer) => {
-	for (let mutation of mutations) {
+  for (let mutation of mutations) {
     // watch for clicks on the differnt audio tracks
-		if (mutation.addedNodes && mutation.addedNodes.length > 0 && mutation.addedNodes[0].className === 'audio-track') {
+    if (mutation.addedNodes && mutation.addedNodes.length > 0 && mutation.addedNodes[0].className === 'audio-track') {
       let node = mutation.addedNodes[0]
       node.addEventListener('click', audioTrackSelectListener)
     }
@@ -147,24 +163,7 @@ const videoObserver = (mutations, observer) => {
   }
 }
 
-function syncUp() {
-  let timeToSeek = isCasting ? remotePlayer.currentTime : localPlayer.currentTime
-  console.log('send sync request')
-  if (port) port.postMessage({ sync: timeToSeek })
-}
-
-function getURLPath() {
-  return window.location.href.split('?')[0]
-}
-
 const observer = new MutationObserver(videoObserver)
 observer.observe(document.getElementById('html5-player'), { attributes: false, childList: true, subtree: true })
-
-port = chrome.runtime.connect(extensionId, { name: getURLPath() })
-port.onMessage.addListener(message => {
-  console.log('message received', message)
-  if (message.sync)
-    seekTo(message.sync)
-})
 
 console.log('Loaded F1 Playback Controls')
