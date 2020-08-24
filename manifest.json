@@ -18,7 +18,8 @@
     }
   ],
   "permissions": [
-    "https://f1tv.formula1.com/*"
+    "https://f1tv.formula1.com/*",
+    "webNavigation"
   ],
   "web_accessible_resources": [
     "src/browser-polyfill.min.js",

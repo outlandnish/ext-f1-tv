@@ -84,3 +84,10 @@ function syncUp() {
   console.log('send sync request')
   if (port) port.postMessage({ sync: player.currentTime })
 }
+
+browser.webNavigation.onHistoryStateUpdated.addListener(event => {
+  if (port !== null) {
+    console.log('disconnected port')
+    port.disconnect()
+  }
+})
