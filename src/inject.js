@@ -68,7 +68,7 @@ function getURLPath() {
   return window.location.href.split('?')[0]
 }
 
-function connectPort() {
+function connectPort() {  
   port = browser.runtime.connect(extensionId, { name: getURLPath() })
   port.onMessage.addListener(message => {
     console.log('message received', message)
@@ -84,10 +84,3 @@ function syncUp() {
   console.log('send sync request')
   if (port) port.postMessage({ sync: player.currentTime })
 }
-
-browser.webNavigation.onHistoryStateUpdated.addListener(event => {
-  if (port !== null) {
-    console.log('disconnected port')
-    port.disconnect()
-  }
-})
