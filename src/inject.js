@@ -29,8 +29,9 @@ const injectScripts = () => {
   // inject playback controls
   injectScriptSource(browser.runtime.getURL('src/controls.js'))
 
-  // inject Cast API
-  injectScriptSource(browser.runtime.getURL('src/cast.js'))
+  // inject Cast API only for non-Firefox browsers
+  if (navigator.userAgent.indexOf('Firefox') == 0)
+    injectScriptSource(browser.runtime.getURL('src/cast.js'))
 }
 
 // listens for the custom sync attribute to be updated on the video player
