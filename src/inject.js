@@ -30,7 +30,7 @@ const injectScripts = () => {
   injectScriptSource(browser.runtime.getURL('src/controls.js'))
 
   // inject Cast API only for non-Firefox browsers
-  if (navigator.userAgent.indexOf('Firefox') == 0)
+  if (navigator.userAgent.indexOf('Firefox') == -1)
     injectScriptSource(browser.runtime.getURL('src/cast.js'))
 }
 
