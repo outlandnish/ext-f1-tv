@@ -5,6 +5,8 @@ Modern playback controls for F1 TV. This extension for Chrome and Firefox gives 
 - YouTube style playback controls
 - Google Cast support (via the [F1 TV Google Cast Receiver](https://github.com/outlandnish/f1tv-cast-receiver))
 
+## Download
+
 [![Download from Chrome Web Store](https://developer.chrome.com/webstore/images/ChromeWebStore_Badge_v2_206x58.png 'Available in the Chrome Web Store')](https://chrome.google.com/webstore/detail/f1-tv-playback-controls/bndmmpkkilmcaoddlicjenjffkihmmle?hl=en)
 
 [![Get the Add-On](https://ffp4g1ylyit3jdyti1hqcvtb-wpengine.netdna-ssl.com/addons/files/2015/11/get-the-addon.png 'Get the Add-On')](https://addons.mozilla.org/en-US/android/addon/f1-tv-playback-controls/)
