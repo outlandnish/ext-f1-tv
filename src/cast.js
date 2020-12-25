@@ -19,7 +19,8 @@ document.body.appendChild(injectedCast)
 const initializeCastApi = () => {
   cast.framework.CastContext.getInstance().setOptions({
     receiverApplicationId: appId,
-    autoJoinPolicy: chrome.cast.AutoJoinPolicy.ORIGIN_SCOPED
+    autoJoinPolicy: chrome.cast.AutoJoinPolicy.PAGE_SCOPED,
+    androidReceiverCompatible: true
   })
 
   launcher = document.createElement('google-cast-launcher')
@@ -134,9 +135,10 @@ function safeChangeCast() {
   })
 }
 
-function stopCasting() {
+function stopCasting(stopReceiver) {
+  console.log('stop casting called')
   var castSession = cast.framework.CastContext.getInstance().getCurrentSession()
-  castSession.endSession(true)
+  castSession.endSession(stopReceiver)
 }
 
 function updateAudioTrack(trackName) {
